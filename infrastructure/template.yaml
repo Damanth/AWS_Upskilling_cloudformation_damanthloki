@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Core Data Pipeline Resources
+
+Resources:
+
+  # 🔹 S3 Bucket
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-cloudformation-pipeline-damaanthloki${AWS::897367255919}
+
+  # 🔹 IAM Role for Glue & Step Functions
+  GlueServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GlueServiceRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - glue.amazonaws.com
+                - states.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: GlueAccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                  - logs:*
+                  - glue:*
+                Resource: "*"
+
+  # 🔹 Glue Database
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: my_glue_db_damanthloki
+
+  # 🔹 Step Functions State Machine
+  StepFunction:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: my-state-machine-damanthloki
+      RoleArn: !GetAtt GlueServiceRole.Arn
+      DefinitionString: |
+        {
+          "StartAt": "HelloState",
+          "States": {
+            "HelloState": {
+              "Type": "Pass",
+              "Result": "Hello World",
+              "End": true
+            }
+          }
+        }
