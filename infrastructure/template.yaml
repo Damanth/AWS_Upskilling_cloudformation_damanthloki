@@ -7,7 +7,7 @@ Resources:
   DataBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: my-cloudformation-pipeline-damaanthloki${AWS::897367255919}
+      BucketName: !Sub my-cloudformation-pipeline-${AWS::AccountId}-${AWS::Region}
 
   # 🔹 IAM Role for Glue & Step Functions
   GlueServiceRole:
