@@ -25,5 +25,5 @@ jobs:
         run: |
           aws cloudformation deploy \
             --template-file infrastructure/template.yaml \
-            --stack-name my-data-pipeline-stack \
+            --stack-name my-cloudformation-pipeline-stack-damanthloki \
             --capabilities CAPABILITY_NAMED_IAM
